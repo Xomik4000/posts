@@ -5,27 +5,45 @@ import { Typo } from "../../../components/Typo";
 import { Container } from "../../../components/Container";
 import { Link } from "../../../components/Link";
 import * as SC from "./styles";
-import { getPosts } from "../../../redux/slices/postsSlice";
+import { getPostById, showPosts } from "../../../redux/slices/postsSlice";
 
 export const DetailPostPage = () => {
   const { id } = useParams();
 
+  const { list } = useSelector((state) => state.posts.posts);
   const postForView = useSelector((state) => state.posts.postForView);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPosts(Number(id)))
-  }, [id])
+    const intId = Number(id);
+    const findedPosts = list ? list.find((item) => item.id === intId) : undefined
 
-  if (!postForView) {
+    if (findedPosts) {
+      dispatch(showPosts(findedPosts))
+    } else {
+      dispatch(getPostById(intId));
+    }
+  }, [id, list, dispatch]);
+
+  if (postForView.loading) {
+    return <Container>Loading...</Container>;
+  }
+
+  if (!postForView.post || !postForView.post.hasOwnProperty("id")) {
     return <>Пост не найден</>;
   }
 
+  const { post } = postForView;
+
+  const image =
+    post.image ||
+    "https://img.gazeta.ru/files3/589/11736589/totoro-pic4_zoom-1500x1500-89026.jpg";
+
   return (
     <Container>
-      <Typo>{postForView.title}</Typo>
-      <SC.Image src={postForView.image} alt={postForView.title} />
-      <SC.Text>{postForView.text}</SC.Text>
+      <Typo>{post.title}</Typo>
+      <SC.Image src={image} alt={post.title} />
+      <SC.Text>{post.body}</SC.Text>
       <div style={{ clear: "both" }}></div>
       <SC.LinkWrapper>
         <Link to="/posts/">Обратно к публикациям</Link>
