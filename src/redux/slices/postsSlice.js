@@ -38,7 +38,15 @@ export const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    editPost: (state, action) => {},
+    editPost: (state, action) => {
+      state.posts.list = state.posts.list.map((post) => {
+        if (post.id === action.payload.id) {
+          return action.payload
+        }
+        return post 
+  
+      })
+    },
     addPost: (state, action) => {
       const newPost = {...action.payload}
       newPost.id = new Date().getTime()
