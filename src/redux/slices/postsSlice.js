@@ -41,24 +41,35 @@ export const postsSlice = createSlice({
     editPost: (state, action) => {
       state.posts.list = state.posts.list.map((post) => {
         if (post.id === action.payload.id) {
-          return action.payload
+          return action.payload;
         }
-        return post 
-  
-      })
+        return post;
+      });
     },
     addPost: (state, action) => {
-      const newPost = {...action.payload}
-      newPost.id = new Date().getTime()
+      const newPost = { ...action.payload };
+      newPost.id = new Date().getTime();
 
-      state.posts.list = state.posts.list ? [newPost, ...state.posts.list] : [newPost]
+      state.posts.list = state.posts.list
+        ? [newPost, ...state.posts.list]
+        : [newPost];
     },
     showPosts: (state, action) => {
       state.postForView = {
         post: action.payload,
         loading: false,
       };
-    }
+    },
+    deletePost: (state, action) => {
+      state.posts.list = state.posts.list.filter(
+        (post) => post.id !== action.payload.id,
+      );
+      
+      state.postForView = {
+        post: null,
+        loading: false,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPostById.pending, (state, action) => {
@@ -100,6 +111,6 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { editPost, addPost, showPosts } = postsSlice.actions;
+export const { editPost, addPost, showPosts, deletePost } = postsSlice.actions;
 
 export default postsSlice.reducer;
