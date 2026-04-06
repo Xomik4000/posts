@@ -1,10 +1,9 @@
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import { Typo } from "../../components/ui/Typo";
 import { Container } from "../../components/ui/Container";
 import { Field } from "../../components/ui/Field";
 import { Form } from "../../components/ui/Form";
 import { Input } from "../../components/ui/Input";
-import { DEFAULT_VALUES } from "../posts/components/PostForm";
 import { useNavigate } from "react-router-dom";
 
 export const RegistrationPage = () => {
